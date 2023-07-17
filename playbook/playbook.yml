@@ -1,0 +1,179 @@
+---
+- name: Playbook Demo
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install the Required packages
+      become: true
+      apt: 
+        name: 
+          - unzip
+          - curl
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Download AWS CLI packages
+      become: true
+      command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      args:
+        chdir: /tmp
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+
+    - name: Extracting the package
+      become: true
+      command: unzip /tmp/awscliv2.zip -d /tmp
+      args:
+        creates: /tmp/aws
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Remove AWS CLI binaries
+      become: true
+      command: sudo rm /usr/local/bin/aws /usr/local/bin/aws_completer
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+      ignore_errors: true
+
+    - name: Remove AWS CLI installation directory
+      become: true
+      command: sudo rm -rf /usr/local/aws-cli
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+      ignore_errors: true
+
+    - name: Running AWS CLI installation script
+      become: true
+      command: sudo /tmp/aws/install
+      args:
+        chdir: /tmp/aws
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+      ignore_errors: true
+
+    - name: Verfiying AWS CLI Installation
+      command: aws --version
+      register: aws_cli_output
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Display AWS CLI version 
+      debug: 
+        var: aws_cli_output.stdout_lines
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+- name: Docker  Installation
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install the Required packages fcr Docker installation
+      become: true
+      apt: 
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl 
+          - software-properties-common
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Adding Docker official GPG Key
+      become: true
+      apt_key: 
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Verify gpg key with the fingerprint
+      become: true 
+      apt_key: 
+        id: 0EBFCD88
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Configure Docker for Ubuntu stable repository
+      become: true
+      apt_repository: 
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+        update_cache: yes
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Install docker-ce
+      become: true
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Install docker-compose from official github repo
+      become: true
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+- name: Getting objects from s3 bucket
+  hosts: all
+  tasks:
+    - name: Installing python and pip 
+      become: true
+      apt:
+        name:  
+          - python3
+          - python3-pip
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Installing boto3
+      become: true
+      pip:
+        name: boto3
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Making directory 
+      become: true
+      file: 
+        path: /var/demo
+        state: directory
+        mode: "0755"
+        owner: root
+        group: root
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Downloading files from s3 bucket
+      become: true 
+      get_url:
+        url: "{{ lookup('env', 's3_object_url') }}"
+        dest: /var/qualityops
+        mode: "0755"
+        owner: root
+        group: root
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+- name: Running Application  
+  hosts: all
+  tasks:
+    - name: Running application with docker-compose
+      become: true
+      command: sudo docker-compose -f docker-compose.yml up -d --build 
+      args: 
+        chdir: /var/demo
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
