@@ -139,7 +139,7 @@
       become: true 
       get_url:
         url: "{{ lookup('env', 's3_object_url') }}"
-        dest: /var/qualityops
+        dest: /var/demo
         mode: "0755"
         owner: root
         group: root
