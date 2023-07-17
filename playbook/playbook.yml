@@ -124,27 +124,6 @@
       vars:
         ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
 
-- name: Getting objects from s3 bucket
-  hosts: all
-  tasks:
-    - name: Installing python and pip 
-      become: true
-      apt:
-        name:  
-          - python3
-          - python3-pip
-        state: present
-      vars:
-        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
-
-    - name: Installing boto3
-      become: true
-      pip:
-        name: boto3
-        state: present
-      vars:
-        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
-
     - name: Making directory 
       become: true
       file: 
