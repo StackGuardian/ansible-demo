@@ -1,0 +1,19 @@
+---
+- name: Ansible Demo
+  host: all
+  gather_facts: no
+  tasks:
+    - name: Install Nginx 
+      become: true
+      apt:
+        name: 
+          - nginx 
+        state: present
+      vars:
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+
+    - name: Start Nginx service and enable it on boot
+      service:
+        name: nginx
+        state: started
+        enabled: yes
