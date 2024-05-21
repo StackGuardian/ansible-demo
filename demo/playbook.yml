@@ -1,6 +1,6 @@
 ---
 - name: Ansible Demo
-  hosts: host1
+  hosts: all
   gather_facts: no
   tasks:
     - name: Install Nginx 
