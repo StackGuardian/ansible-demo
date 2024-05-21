@@ -1,8 +1,4 @@
 ---
-- name: Add host to group 'just_created'
-  ansible.builtin.add_host:
-    name: "{{ host1 }}"
-    groups: just_created
 - name: Ansible Demo
   hosts: all
   gather_facts: no
