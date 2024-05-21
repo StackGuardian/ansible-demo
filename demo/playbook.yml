@@ -1,6 +1,10 @@
 ---
+- name: Add host to group 'just_created'
+  add_host:
+    name: "{{ host1 }}"
+    groups: just_created
 - name: Ansible Demo
-  hosts: 4.184.202.66
+  hosts: all
   gather_facts: no
   tasks:
     - name: Install Nginx 
