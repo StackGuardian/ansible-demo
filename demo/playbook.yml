@@ -1,6 +1,6 @@
 ---
 - name: Ansible Demo
-  hosts: "{{ host1 }}"
+  hosts: 4.184.202.66
   gather_facts: no
   tasks:
     - name: Install Nginx 
