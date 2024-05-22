@@ -1,2 +1,1 @@
 [default]
-host1 ansible_host=1.1.1.1
