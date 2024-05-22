@@ -7,6 +7,7 @@
       ansible.builtin.add_host:
         name: host3
         ansible_host: "{{ host_ip }}"
+        ansible_user: azureuser
 - name: Ansible Demo
   hosts: all
   gather_facts: no
