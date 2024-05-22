@@ -3,6 +3,10 @@
   hosts: all
   gather_facts: no
   tasks:
+    - name: Add a new host to inventory
+      ansible.builtin.add_host:
+        name: host3
+        ansible_host: "{{ host_ip }}"
     - name: Install Nginx 
       become: true
       apt:
