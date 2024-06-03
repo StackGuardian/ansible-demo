@@ -18,6 +18,8 @@
       upgrade: yes
       update_cache: yes
       cache_valid_time: 86400 
+    vars:
+      ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
 - name: Ansible Demo
   hosts: all
   gather_facts: no
