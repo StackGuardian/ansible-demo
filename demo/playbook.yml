@@ -9,7 +9,7 @@
         ansible_host: "{{ host_ip }}"
         ansible_user: "{{ ansible_username }}"
 - name: Install packages
-  hosts: all
+  hosts: ansiblehost
   become: true
   gather_facts: no
   tasks:
@@ -21,7 +21,7 @@
     vars:
       ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
 - name: Ansible Demo
-  hosts: all
+  hosts: ansiblehost
   gather_facts: no
   tasks:
     - name: Install Nginx 
