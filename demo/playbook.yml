@@ -8,30 +8,29 @@
         name: ansiblehost
         ansible_host: "{{ host_ip }}"
         ansible_user: "{{ ansible_username }}"
+
 - name: Install packages
   hosts: ansiblehost
   become: true
-  gather_facts: no
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
   tasks:
-  - name: Update and upgrade apt packages
-    apt:
-      upgrade: yes
-      update_cache: yes
-      cache_valid_time: 86400 
-    vars:
-      ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 
+
 - name: Ansible Demo
   hosts: ansiblehost
-  gather_facts: no
+  become: true
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
   tasks:
-    - name: Install Nginx 
-      become: true
+    - name: Install Nginx
       apt:
-        name: 
-          - nginx 
+        name: nginx
         state: present
-      vars:
-        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
 
     - name: Start Nginx service and enable it on boot
       service:
