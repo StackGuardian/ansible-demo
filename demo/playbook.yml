@@ -5,9 +5,10 @@
   tasks:
     - name: Add a new host to inventory
       ansible.builtin.add_host:
-        name: ansiblehost
-        ansible_host: "{{ host_ip }}"
+        name: "{{ host_ip }}" 
         ansible_user: "{{ ansible_username }}"
+        group:
+          - ansiblehost
 
 - name: Install packages
   hosts: ansiblehost
