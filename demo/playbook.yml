@@ -1,13 +1,15 @@
 ---
 - name: Add new host
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   tasks:
+    # Prevent logging of sensitive host credentials (IP, username, password)
     - name: Add a new host to inventory
       ansible.builtin.add_host:
         name: ansiblehost
         ansible_host: "{{ host_ip }}"
         ansible_user: "{{ ansible_username }}"
+      no_log: true
 
 - name: Install packages
   hosts: ansiblehost
@@ -19,7 +21,7 @@
       apt:
         upgrade: yes
         update_cache: yes
-        cache_valid_time: 86400 
+        cache_valid_time: 86400
 
 - name: Ansible Demo
   hosts: ansiblehost
