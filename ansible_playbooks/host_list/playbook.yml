@@ -1,0 +1,23 @@
+---
+- name: Configure hosts from platform inventory
+  hosts: all
+  become: true
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+    - name: Install common packages
+      apt:
+        name:
+          - curl
+          - vim
+          - htop
+        state: present
+
+    - name: Print confirmation
+      debug:
+        msg: "Host {{ inventory_hostname }} configured successfully"

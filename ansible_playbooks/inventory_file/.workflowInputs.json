@@ -1,0 +1,7 @@
+{
+  "playbookPath": "playbook.yml",
+  "ansibleAction": "run",
+  "inventoryType": "hosts",
+  "inventory": "hosts",
+  "formatOutput": true
+}

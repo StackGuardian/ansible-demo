@@ -1,0 +1,24 @@
+---
+- name: Gather system info from dynamically discovered hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Gather facts
+      setup:
+        gather_subset:
+          - min
+
+    - name: Print OS information
+      debug:
+        msg: >-
+          {{ inventory_hostname }} runs
+          {{ ansible_distribution }} {{ ansible_distribution_version }}
+          ({{ ansible_architecture }})
+
+    - name: Check disk usage
+      command: df -h /
+      register: disk_usage
+
+    - name: Report disk usage
+      debug:
+        msg: "{{ disk_usage.stdout_lines }}"

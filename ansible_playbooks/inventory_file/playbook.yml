@@ -1,0 +1,33 @@
+---
+- name: Install and start Nginx
+  hosts: webservers
+  become: true
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+- name: Verify database connectivity
+  hosts: dbservers
+  become: true
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+  tasks:
+    - name: Check if PostgreSQL is running
+      command: systemctl is-active postgresql
+      register: pg_status
+      ignore_errors: true
+
+    - name: Report PostgreSQL status
+      debug:
+        msg: "PostgreSQL status: {{ pg_status.stdout | default('not installed') }}"

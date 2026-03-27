@@ -1,0 +1,7 @@
+{
+  "playbookPath": "playbook.yml",
+  "ansibleAction": "run",
+  "inventoryType": "script",
+  "inventoryScript": "dynamic_inventory.py",
+  "formatOutput": true
+}
