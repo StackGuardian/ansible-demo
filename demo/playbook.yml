@@ -42,6 +42,6 @@
   gather_facts: no
   tasks:
     - name: Set nginx URL as workflow output
-      ansible.builtin.set_fact:
+      set_fact:
         nginx_url: "http://{{ host_ip }}"
         cacheable: yes
