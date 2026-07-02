@@ -19,7 +19,7 @@
       apt:
         upgrade: yes
         update_cache: yes
-        cache_valid_time: 86400 
+        cache_valid_time: 86400
 
 - name: Ansible Demo
   hosts: ansiblehost
@@ -31,9 +31,17 @@
       apt:
         name: nginx
         state: present
-
     - name: Start Nginx service and enable it on boot
       service:
         name: nginx
         state: started
         enabled: yes
+
+- name: Export outputs
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Set nginx URL as workflow output
+      ansible.builtin.set_fact:
+        nginx_url: "http://{{ host_ip }}"
+        cacheable: yes
