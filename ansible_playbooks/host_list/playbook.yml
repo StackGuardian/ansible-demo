@@ -4,6 +4,9 @@
   become: true
   vars:
     ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+    # Optional override, passed via --extra-vars (e.g. -e "greeting=hello").
+    # Not mandatory: falls back to the default below when not provided.
+    greeting: "configured successfully"
   tasks:
     - name: Update apt cache
       apt:
@@ -20,4 +23,4 @@
 
     - name: Print confirmation
       debug:
-        msg: "Host {{ inventory_hostname }} configured successfully"
+        msg: "Host {{ inventory_hostname }} {{ greeting }}"
